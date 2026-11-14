@@ -7,6 +7,11 @@ this version; the module was used successfully in the checks below.
 ## Observed locally
 
 - Dependency-free `npm ci`, setup, explicit migration and the setup doctor ran.
+- A fresh local clone of the initial `fdabd84` commit completed `npm ci`, setup,
+  migration and code/link checks. Its documented `dev` command started both
+  services, accepted one fictional order, sent it and read back confirmation.
+  The backup and isolated restore commands then succeeded; the restored Hub
+  and warehouse each contained exactly one order.
 - All 18 automated tests passed. The suite includes a check that repeated setup
   preserves the existing keys and settings instead of silently replacing them.
 - The HTTP tests ran real Hub and warehouse servers on temporary local ports.
