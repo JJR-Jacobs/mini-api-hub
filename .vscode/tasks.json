@@ -1,0 +1,9 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Check setup", "type": "npm", "script": "doctor", "problemMatcher": [] },
+    { "label": "Start both services", "type": "npm", "script": "dev", "problemMatcher": [] },
+    { "label": "Test", "type": "npm", "script": "test", "group": "test", "problemMatcher": [] },
+    { "label": "Check code and lessons", "type": "npm", "script": "check", "problemMatcher": [] }
+  ]
+}

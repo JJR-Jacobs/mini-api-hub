@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mini API Hub · learning lab</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Mini API Hub home"><span class="brand-mark">m</span> mini api hub</a>
+      <span class="edition">A hands-on learning lab <span class="version">v0.1</span></span>
+    </header>
+    <main>
+      <div class="intro">
+        <p class="eyebrow">SMALL APP. REAL SOFTWARE SKILLS.</p>
+        <h1>Follow an order.<br>Understand the whole journey.</h1>
+        <p class="lede">Create an order, send it to a fictional warehouse, and investigate what happens along the way.</p>
+      </div>
+      <section class="journey" aria-label="How an order moves">
+        <div><span class="step">01</span><strong>Shop</strong><span>You create an order</span></div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div><span class="step">02</span><strong>API Hub</strong><span>Validates and stores it</span></div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div><span class="step">03</span><strong>Warehouse</strong><span>Accepts it once</span></div>
+      </section>
+      <div class="workspace">
+        <div>
+          <section class="card connect-card" aria-labelledby="connect-heading">
+            <div class="section-heading"><h2 id="connect-heading">1. Connect to your Hub</h2><span id="connection-status" class="badge">Disconnected</span></div>
+            <p>Your local key unlocks the API. Find <code>API_KEY</code> in your own <code>.env</code> file.</p>
+            <form id="connect-form" class="connect-form">
+              <label class="visually-hidden" for="api-key">Local Hub API key</label>
+              <input id="api-key" name="api-key" type="password" autocomplete="off" placeholder="Paste your local API key" required>
+              <button type="submit">Connect</button>
+            </form>
+            <p class="hint">The key stays in this page’s memory. Refreshing the page disconnects it.</p>
+          </section>
+          <section class="card" aria-labelledby="create-heading">
+            <div class="section-heading"><h2 id="create-heading">2. Create a shop order</h2><span class="small-note">Fictional data only</span></div>
+            <form id="order-form">
+              <div class="fields">
+                <label for="reference">Order reference<input id="reference" name="reference" value="ORDER-001" maxlength="64" pattern="[A-Za-z0-9][A-Za-z0-9._-]*" required></label>
+                <label for="sku">Product code<input id="sku" name="sku" value="DESK-01" maxlength="64" pattern="[A-Za-z0-9][A-Za-z0-9._-]*" required></label>
+                <label for="quantity">Quantity<input id="quantity" name="quantity" type="number" min="1" max="100" step="1" value="2" required></label>
+              </div>
+              <div class="form-footer"><p class="hint">Creating an order saves it in the Hub. Sending is a separate action.</p><button id="create-button" type="submit" disabled>Create order</button></div>
+            </form>
+          </section>
+          <section class="card orders-card" aria-labelledby="orders-heading">
+            <div class="section-heading"><h2 id="orders-heading">3. Send and inspect</h2><button id="refresh-button" class="secondary" type="button" disabled>Refresh orders</button></div>
+            <div id="message" class="message" role="status" aria-live="polite">Connect with your local key to begin.</div>
+            <div class="table-wrap">
+              <table><caption class="visually-hidden">Orders stored in your Hub</caption><thead><tr><th>Order</th><th>Product</th><th>Quantity</th><th>Status</th><th>Action</th></tr></thead><tbody id="orders"></tbody></table>
+            </div>
+            <p id="empty" class="empty">Your order list starts here.</p>
+          </section>
+        </div>
+        <aside>
+          <section class="lesson-card">
+            <span class="lesson-tag">YOUR FIRST MINI CHALLENGE</span>
+            <h2>Make a change.<br>See it work.</h2>
+            <ol><li>Open <code>public/index.html</code> in VS Code.</li><li>Change this challenge’s heading.</li><li>Save, refresh this page, and inspect your Git diff.</li></ol>
+            <p>You have just connected a source file to a running application.</p>
+          </section>
+          <section class="explain-card">
+            <h2>Read the status</h2>
+            <dl><dt>Pending</dt><dd>Saved locally; not yet sent.</dd><dt>Sent</dt><dd>The warehouse confirmed matching data.</dd><dt>Uncertain</dt><dd>The response did not confirm the outcome. Retry the same order.</dd><dt>Failed</dt><dd>A known rejection needs attention before retrying.</dd></dl>
+          </section>
+          <p class="course-note">Start the full learning journey in <code>docs/COURSE.md</code>. Each lesson includes a small change, a fault to investigate, and a check.</p>
+        </aside>
+      </div>
+    </main>
+    <footer>Build → break → investigate → fix → verify <span>Original fictional example · local learning edition</span></footer>
+  </body>
+</html>

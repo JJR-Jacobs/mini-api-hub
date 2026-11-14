@@ -1,0 +1,21 @@
+# Run from the repository root with both -f files. Caddy joins the same network.
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      HUB_DOMAIN: ${HUB_DOMAIN:?Set HUB_DOMAIN to your learning server domain}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      hub:
+        condition: service_healthy
+
+volumes:
+  caddy-data:
+  caddy-config:

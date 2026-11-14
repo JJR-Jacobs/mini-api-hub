@@ -1,0 +1,68 @@
+name: mini-api-hub
+
+x-app: &app
+  image: mini-api-hub:${APP_VERSION:-local}
+  build: .
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  environment: &environment
+    API_KEY: ${API_KEY:?Run npm run setup first}
+    WAREHOUSE_KEY: ${WAREHOUSE_KEY:?Run npm run setup first}
+    HOST: 0.0.0.0
+    PORT: 3000
+    WAREHOUSE_PORT: 4000
+    WAREHOUSE_URL: http://warehouse:4000
+    DATABASE_PATH: /data/hub/hub.sqlite
+    WAREHOUSE_DATABASE_PATH: /data/warehouse/warehouse.sqlite
+    REQUEST_TIMEOUT_MS: ${REQUEST_TIMEOUT_MS:-500}
+    WAREHOUSE_MODE: ${WAREHOUSE_MODE:-normal}
+
+services:
+  migrate:
+    <<: *app
+    command: ["node", "--input-type=module", "-e", "import { migrate, migrateWarehouse } from './src/db.js'; migrate(process.env.DATABASE_PATH); migrateWarehouse(process.env.WAREHOUSE_DATABASE_PATH);"]
+    volumes:
+      - hub-data:/data/hub
+      - warehouse-data:/data/warehouse
+
+  warehouse:
+    <<: *app
+    command: ["node", "src/warehouse.js"]
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - warehouse-data:/data/warehouse
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  hub:
+    <<: *app
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      warehouse:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - hub-data:/data/hub
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  hub-data:
+  warehouse-data:
